@@ -18,12 +18,18 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.PlainDocument;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.UIManager;
+import javax.swing.JFormattedTextField;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class NewMenu extends JFrame {
     /*
@@ -110,8 +116,7 @@ public class NewMenu extends JFrame {
 
 	JComboBox<Object> comboBox = new JComboBox<Object>();
 	comboBox.setModel((ComboBoxModel<Object>) new DefaultComboBoxModel<Object>(gameMode.getNames()));
-	comboBox.setBounds(COMPONENT_MARGIN, topPanel.getHeight() / 2 - comboBoxHeight / 2, comboBoxWidth,
-		comboBoxHeight);// COMBO BOX LOCATION
+	comboBox.setBounds(10, 10, 80, 25);// COMBO BOX LOCATION
 	topPanel.add(comboBox);
 
 	int clockW = 60;
@@ -137,6 +142,30 @@ public class NewMenu extends JFrame {
 
 	topPanel.add(cl2);
 
+	JLabel lblW = new JLabel("W:");
+	lblW.setFont(new Font("Tahoma", Font.BOLD, 13));
+	lblW.setHorizontalAlignment(SwingConstants.CENTER);
+	lblW.setBounds(100, 11, 20, 23);
+	topPanel.add(lblW);
+
+	JFormattedTextField formattedTextField = new JFormattedTextField();
+	PlainDocument doc = (PlainDocument) formattedTextField.getDocument();
+	doc.setDocumentFilter(new IntFilter());
+	formattedTextField.setBounds(119, 10, 28, 24);
+	topPanel.add(formattedTextField);
+
+	JFormattedTextField formattedTextField_1 = new JFormattedTextField();
+	doc = (PlainDocument) formattedTextField_1.getDocument();
+	doc.setDocumentFilter(new IntFilter());
+	formattedTextField_1.setBounds(176, 10, 28, 24);
+	topPanel.add(formattedTextField_1);
+
+	JLabel lblH = new JLabel("H:");
+	lblH.setFont(new Font("Tahoma", Font.BOLD, 13));
+	lblH.setHorizontalAlignment(SwingConstants.CENTER);
+	lblH.setBounds(157, 11, 20, 23);
+	topPanel.add(lblH);
+
 	JPanel mainPanel = new JPanel();
 	mainPanel.setBorder(new MatteBorder(2, 4, 6, 4, (Color) new Color(153, 180, 209)));
 	mainPanel.setBackground(SystemColor.inactiveCaption);
@@ -145,24 +174,5 @@ public class NewMenu extends JFrame {
 
 	contentPane.add(mainPanel);
 
-	JButton btnNewButton = new JButton("New button");
-	btnNewButton.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		cl.setClock(cl.getValue() - 1);
-	    }
-	});
-	btnNewButton.setBounds(283, 11, 89, 23);
-	mainPanel.add(btnNewButton);
-
-	JButton btnNewButton_1 = new JButton("New button");
-	btnNewButton_1.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		new Thread(cl2).start();
-	    }
-	});
-	btnNewButton_1.setBounds(422, 11, 89, 23);
-	mainPanel.add(btnNewButton_1);
-
     }
-
 }
