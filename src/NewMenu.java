@@ -103,10 +103,10 @@ public class NewMenu extends JFrame {
 	comboBox.setBounds(COMPONENT_MARGIN, topPanel.getHeight() / 2 - comboBoxHeight / 2, comboBoxWidth,
 		comboBoxHeight);// COMBO BOX LOCATION
 	topPanel.add(comboBox);
-	// smileFaceLabel.getX() - comboBoxWidth - COMPONENT_MARGIN
-	JPanel panel_1 = new JPanel();
-	panel_1.setBounds(178, 11, 109, 23);
-	topPanel.add(panel_1);
+	
+		Clock cl = new Clock(timer, 190, 44, 35, 38);
+		cl.setBounds(227, 12, 90, 23);
+		topPanel.add(cl);
 
 	JPanel mainPanel = new JPanel();
 	mainPanel.setBorder(new MatteBorder(2, 4, 6, 4, (Color) new Color(153, 180, 209)));
@@ -118,22 +118,9 @@ public class NewMenu extends JFrame {
 	 timer.enable();
 	timer.setStopTime(999);
 	timer.setDelay(1000);
-
-	Clock cl = new Clock(timer, 190, 44, 35, 38);
 	new Thread(cl).start();
 
-	mainPanel.add(cl);
-
 	contentPane.add(mainPanel);
-
-	JButton btnNewButton = new JButton("start");
-	btnNewButton.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent arg0) {
-		 timer.on();
-	    }
-	});
-	btnNewButton.setBounds(76, 93, 89, 23);
-	mainPanel.add(btnNewButton);
 
     }
 
