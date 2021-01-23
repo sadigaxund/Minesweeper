@@ -10,8 +10,6 @@ public class Timer {
     public Timer() {
     }
 
-  
-
     public void reset() {
 	seconds = 0;
 	stopTime = -1;
@@ -53,8 +51,8 @@ public class Timer {
      * @param seconds
      *                    the seconds to set
      */
-    public synchronized void set(int seconds) {
-	this.seconds = seconds;
+    public synchronized int set(int seconds) {
+	return this.seconds = seconds;
     }
 
     /**

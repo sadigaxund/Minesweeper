@@ -19,6 +19,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.UIManager;
 
 public class NewMenu extends JFrame {
     /*
@@ -39,7 +44,7 @@ public class NewMenu extends JFrame {
     public static final int WINDOW_HEIGHT = (int) (SCREEN_HEIGHT * RATIO);
     public static final int COMPONENT_MARGIN = 10;
 
-    private Mode gameMode = new Mode();
+    private Mode gameMode;
 
     /**
      * Launch the application.
@@ -64,9 +69,13 @@ public class NewMenu extends JFrame {
      * Create the frame.
      */
     public NewMenu() {
-	initComponents();
 	initVars();
+	initComponents();
 
+    }
+
+    private void initVars() {
+	gameMode = new Mode(Mode.EASY);// Default Value is easy
     }
 
     private void initComponents() {
@@ -88,6 +97,7 @@ public class NewMenu extends JFrame {
 
 	int smileFaceSize = (int) (topPanel.getHeight() - COMPONENT_MARGIN * 1.3); // SMILE FACE ICON SIZE
 	JLabel smileFaceLabel = new JLabel("");
+	// smileFaceLabel.setBorder(UIManager.getBorder("DesktopIcon.border"));
 	smileFaceLabel.setBounds(topPanel.getWidth() / 2 - smileFaceSize / 2,
 		topPanel.getHeight() / 2 - smileFaceSize / 2, smileFaceSize, smileFaceSize); // SMILE FACE LOCATION
 	Image smileFaceIcon = JImages.scaleImage(new ImageIcon(".\\img\\smile\\smile1.png").getImage(),
@@ -103,10 +113,29 @@ public class NewMenu extends JFrame {
 	comboBox.setBounds(COMPONENT_MARGIN, topPanel.getHeight() / 2 - comboBoxHeight / 2, comboBoxWidth,
 		comboBoxHeight);// COMBO BOX LOCATION
 	topPanel.add(comboBox);
-	
-		Clock cl = new Clock(timer, 190, 44, 35, 38);
-		cl.setBounds(227, 12, 90, 23);
-		topPanel.add(cl);
+
+	int clockW = 60;
+	int clockH = topPanel.getHeight() - COMPONENT_MARGIN;
+
+	Timer timer = new Timer();
+	timer.disable();
+	timer.setStopTime(999);
+
+	Clock cl = new Clock(timer, clockW, clockH, smileFaceLabel.getX() - clockW - COMPONENT_MARGIN,
+		COMPONENT_MARGIN / 2);
+	cl.setClock(100);
+	topPanel.add(cl);
+	new Thread(cl).start();
+
+	Timer timer2 = new Timer();
+	timer2.enable();
+	timer2.setStopTime(999);
+	timer2.setDelay(1000);
+
+	Clock cl2 = new Clock(timer2, clockW, clockH,
+		smileFaceLabel.getX() + smileFaceLabel.getWidth() + COMPONENT_MARGIN, COMPONENT_MARGIN / 2);
+
+	topPanel.add(cl2);
 
 	JPanel mainPanel = new JPanel();
 	mainPanel.setBorder(new MatteBorder(2, 4, 6, 4, (Color) new Color(153, 180, 209)));
@@ -114,17 +143,26 @@ public class NewMenu extends JFrame {
 	mainPanel.setBounds(0, 42, 720, 533);
 	mainPanel.setLayout(null);
 
-	Timer timer = new Timer();
-	 timer.enable();
-	timer.setStopTime(999);
-	timer.setDelay(1000);
-	new Thread(cl).start();
-
 	contentPane.add(mainPanel);
 
+	JButton btnNewButton = new JButton("New button");
+	btnNewButton.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		cl.setClock(cl.getValue() - 1);
+	    }
+	});
+	btnNewButton.setBounds(283, 11, 89, 23);
+	mainPanel.add(btnNewButton);
+
+	JButton btnNewButton_1 = new JButton("New button");
+	btnNewButton_1.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		new Thread(cl2).start();
+	    }
+	});
+	btnNewButton_1.setBounds(422, 11, 89, 23);
+	mainPanel.add(btnNewButton_1);
+
     }
 
-    private void initVars() {
-
-    }
 }
