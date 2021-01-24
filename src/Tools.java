@@ -37,6 +37,14 @@ public class Tools {
 	return n >= 0 && n <= 9;
     }
 
+    public static boolean equals(String str1, String str2) {
+	return str1.equals(str2);
+    }
+
+    public static boolean equalsNoCase(String str1, String str2) {
+	return str1.toLowerCase().equals(str2.toLowerCase());
+    }
+
     public static void main(String[] str) {
 	System.out.println(getDigit(419848924, 2, true));
     }

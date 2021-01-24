@@ -8,17 +8,22 @@ public class Mode {
 
     }
 
-    public Mode(Mode mode) {
-	setMapHeight(mode.getMapHeight());
-	setMapWidth(mode.getMapWidth());
-	setMineAmount(mode.getMineAmount());
-	setName(mode.getName());
-    }
-
     private int mineAmount;
     private int mapWidth;
     private int mapHeight;
     private String name;
+
+    public static Mode getModeByName(String name) {
+	for (Mode mode : getStandardModes())
+	    if (Tools.equalsNoCase(name, mode.getName()))
+		return mode;
+
+	return new Mode().setName(name);
+    }
+
+    public static Mode[] getStandardModes() {
+	return new Mode[] { EASY, MEDIUM, HARD };
+    }
 
     /**
      * 
