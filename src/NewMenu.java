@@ -3,6 +3,8 @@ import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import Utils.JHardware;
@@ -89,12 +91,12 @@ public class NewMenu extends JFrame {
 	contentPane.add(topPanel);
 	topPanel.setLayout(null);
 
-	int smileFaceSize = (int) (topPanel.getHeight() - COMPONENT_MARGIN * 1.3); // SMILE FACE ICON SIZE
+	int smileFaceSize = (int) (topPanel.getHeight() - COMPONENT_MARGIN * 1); // SMILE FACE ICON SIZE
 	smileFaceLbl = new JLabel("");
 	smileFaceLbl.setBounds(topPanel.getWidth() / 2 - smileFaceSize / 2,
 		topPanel.getHeight() / 2 - smileFaceSize / 2, smileFaceSize, smileFaceSize); // SMILE FACE LOCATION
-	Image smileFaceIcon = JImages.scaleImage(new ImageIcon(Images.SMILE_HAPPY).getImage(),
-		smileFaceLbl.getWidth(), smileFaceLbl.getHeight());
+	Image smileFaceIcon = JImages.scaleImage(new ImageIcon(Images.SMILE_HAPPY).getImage(), smileFaceLbl.getWidth(),
+		smileFaceLbl.getHeight());
 	smileFaceLbl.setIcon(new ImageIcon(smileFaceIcon));
 	topPanel.add(smileFaceLbl);
 
@@ -121,6 +123,10 @@ public class NewMenu extends JFrame {
 	mainPanel.setLayout(null);
 
 	contentPane.add(mainPanel);
+
+	GameView gameView = new GameView(mainPanel, 219, 182);
+	gameView.update();
+	mainPanel.add(gameView);
     }
 
     private void addClocks() {
@@ -214,10 +220,10 @@ public class NewMenu extends JFrame {
     }
 
     private void displayModeInfo() {
-	formattedTextFieldM.setText(GAMEMODE.getMineAmount() + "");
+	formattedTextFieldM.setText(GAMEMODE.getMinesAmount() + "");
 	formattedTextFieldW.setText(GAMEMODE.getMapWidth() + "");
 	formattedTextFieldH.setText(GAMEMODE.getMapHeight() + "");
-	cl.setClock(GAMEMODE.getMineAmount());
+	cl.setClock(GAMEMODE.getMinesAmount());
     }
 
     private void comboBoxHandleAction() {
@@ -263,5 +269,4 @@ public class NewMenu extends JFrame {
     private Clock cl2;
 
     private static final Font modeLabelFont = new Font("Tahoma", Font.BOLD, 13);
-
 }

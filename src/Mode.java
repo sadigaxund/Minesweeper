@@ -52,7 +52,7 @@ public class Mode {
     /**
      * @return the amount of mines
      */
-    public int getMineAmount() {
+    public int getMinesAmount() {
 	return mineAmount;
     }
 
