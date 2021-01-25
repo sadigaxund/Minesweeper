@@ -1,6 +1,4 @@
 
-
-
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -36,6 +34,7 @@ public class CustomButton extends BasicButtonUI {
 	};
 	f.addWindowListener(wndCloser);
 	f.setVisible(true);
+	
     }
 
     @Override
@@ -49,7 +48,15 @@ public class CustomButton extends BasicButtonUI {
     @Override
     public void paint(Graphics g, JComponent c) {
 	AbstractButton b = (AbstractButton) c;
-	paintBackground(g, b, b.getModel().isPressed() ? 2 : 0);
+	// paintBackground(g, b, b.getModel().isPressed() ? 2 : 0);
+
+	if (b.getModel().isPressed()) {
+	    paintBackground(g, b, 2);
+	    
+	} else {
+	    paintBackground(g, b, 0);
+	}
+
 	super.paint(g, c);
     }
 

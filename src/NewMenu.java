@@ -22,12 +22,21 @@ import javax.swing.JFormattedTextField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.FormSpecs;
 
 public class NewMenu extends JFrame {
 
@@ -104,29 +113,10 @@ public class NewMenu extends JFrame {
 	addClocks();
 	addFormattedTextFields();
 	addModeLabels();
-
-	btnNewButton = new JButton("START");
-	btnNewButton.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		startAction();
-	    }
-	});
-	btnNewButton.setFont(new Font("Consolas", Font.BOLD, 13));
-	btnNewButton.setUI(new CustomButton());
-	btnNewButton.setBounds(622, 5, 89, 35);
-	topPanel.add(btnNewButton);
-
-	mainPanel = new JPanel();
-	mainPanel.setBorder(new MatteBorder(2, 4, 6, 4, (Color) new Color(153, 180, 209)));
-	mainPanel.setBackground(SystemColor.inactiveCaption);
-	mainPanel.setBounds(0, 42, 720, 533);
-	mainPanel.setLayout(null);
+	addGameButtons();
 
 	contentPane.add(mainPanel);
 
-	GameView gameView = new GameView(mainPanel, 219, 182);
-	gameView.update();
-	mainPanel.add(gameView);
     }
 
     private void addClocks() {
@@ -153,24 +143,24 @@ public class NewMenu extends JFrame {
     }
 
     private void addFormattedTextFields() {
-	formattedTextFieldM = new JFormattedTextField();
-	PlainDocument doc = (PlainDocument) formattedTextFieldM.getDocument();
+	ftFieldM = new JFormattedTextField();
+	PlainDocument doc = (PlainDocument) ftFieldM.getDocument();
 	IntFilter filter = new IntFilter();
 	doc.setDocumentFilter(filter);
-	formattedTextFieldM.setBounds(119, 10, 28, 24);
-	topPanel.add(formattedTextFieldM);
+	ftFieldM.setBounds(119, 10, 28, 24);
+	topPanel.add(ftFieldM);
 
-	formattedTextFieldW = new JFormattedTextField();
-	doc = (PlainDocument) formattedTextFieldW.getDocument();
+	ftFieldW = new JFormattedTextField();
+	doc = (PlainDocument) ftFieldW.getDocument();
 	doc.setDocumentFilter(filter);
-	formattedTextFieldW.setBounds(176, 10, 28, 24);
-	topPanel.add(formattedTextFieldW);
+	ftFieldW.setBounds(176, 10, 28, 24);
+	topPanel.add(ftFieldW);
 
-	formattedTextFieldH = new JFormattedTextField();
-	doc = (PlainDocument) formattedTextFieldH.getDocument();
+	ftFieldH = new JFormattedTextField();
+	doc = (PlainDocument) ftFieldH.getDocument();
 	doc.setDocumentFilter(filter);
-	formattedTextFieldH.setBounds(233, 10, 28, 24);
-	topPanel.add(formattedTextFieldH);
+	ftFieldH.setBounds(233, 10, 28, 24);
+	topPanel.add(ftFieldH);
 
 	enableTextFields(false);
 	displayModeInfo();
@@ -213,16 +203,53 @@ public class NewMenu extends JFrame {
 	topPanel.add(comboBox);
     }
 
+    private void addGameButtons() {
+	int x, y, w, h;
+
+	btnStart = new JButton("START");
+	btnStart.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		startAction();
+	    }
+	});
+	btnStart.setFont(new Font("Consolas", Font.BOLD, 13));
+	btnStart.setUI(new CustomButton());
+	x = cl2.getX() + cl2.getWidth() + COMPONENT_MARGIN;
+	w = (topPanel.getWidth() - x - 2 * COMPONENT_MARGIN) / 2;
+	h = 35;
+	y = 5;
+	btnStart.setBounds(x, y, w, h);
+	topPanel.add(btnStart);
+
+	btnFinish = new JButton("FINISH");
+	btnFinish.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		finishAction();
+	    }
+	});
+	btnFinish.setUI(new CustomButton());
+	btnFinish.setFont(new Font("Consolas", Font.BOLD, 13));
+	x = btnStart.getX() + btnStart.getWidth() + COMPONENT_MARGIN;
+	btnFinish.setBounds(x, y, w, h);
+	topPanel.add(btnFinish);
+
+	mainPanel = new JPanel();
+	mainPanel.setBorder(new MatteBorder(2, 4, 6, 4, (Color) new Color(153, 180, 209)));
+	mainPanel.setBackground(SystemColor.inactiveCaption);
+	mainPanel.setBounds(0, 42, 720, 533);
+	mainPanel.setLayout(null);
+    }
+
     private void enableTextFields(boolean state) {
-	formattedTextFieldM.setEditable(state);
-	formattedTextFieldW.setEditable(state);
-	formattedTextFieldH.setEditable(state);
+	ftFieldM.setEditable(state);
+	ftFieldW.setEditable(state);
+	ftFieldH.setEditable(state);
     }
 
     private void displayModeInfo() {
-	formattedTextFieldM.setText(GAMEMODE.getMinesAmount() + "");
-	formattedTextFieldW.setText(GAMEMODE.getMapWidth() + "");
-	formattedTextFieldH.setText(GAMEMODE.getMapHeight() + "");
+	ftFieldM.setText(GAMEMODE.getMinesAmount() + "");
+	ftFieldW.setText(GAMEMODE.getMapWidth() + "");
+	ftFieldH.setText(GAMEMODE.getMapHeight() + "");
 	cl.setClock(GAMEMODE.getMinesAmount());
     }
 
@@ -234,6 +261,24 @@ public class NewMenu extends JFrame {
     }
 
     private void startAction() {
+	if (gameView != null) {
+	    mainPanel.remove(gameView);
+	    mainPanel.repaint();
+	}
+	if (Tools.equalsNoCase(GAMEMODE.getName(), "Custom")) {
+	    GAMEMODE.setMapHeight(Integer.parseInt(ftFieldH.getText()));
+	    GAMEMODE.setMapWidth(Integer.parseInt(ftFieldW.getText()));
+	    GAMEMODE.setMineAmount(Integer.parseInt(ftFieldM.getText()));
+	}
+	// FIXME: Gotta do the ratio of the sizes(forex: for each game mode it's
+	// different)
+	gameView = new GameView(mainPanel, GAMEMODE, 500, 500);
+	gameView.update();
+	mainPanel.add(gameView);
+	mainPanel.repaint();
+    }
+
+    private void finishAction() {
 
     }
 
@@ -252,21 +297,25 @@ public class NewMenu extends JFrame {
     private JPanel mainPanel;
     private JPanel topPanel;
 
-    private JFormattedTextField formattedTextFieldM;
-    private JFormattedTextField formattedTextFieldW;
-    private JFormattedTextField formattedTextFieldH;
+    private JFormattedTextField ftFieldM;
+    private JFormattedTextField ftFieldW;
+    private JFormattedTextField ftFieldH;
 
     private JLabel smileFaceLbl;
     private JLabel lblM;
     private JLabel lblW;
     private JLabel lblH;
 
-    private JButton btnNewButton;
+    private JButton btnStart;
+    private JButton btnFinish;
 
     private JComboBox<String> comboBox;
 
     private Clock cl;
     private Clock cl2;
 
+    private GameView gameView;
+
     private static final Font modeLabelFont = new Font("Tahoma", Font.BOLD, 13);
+
 }

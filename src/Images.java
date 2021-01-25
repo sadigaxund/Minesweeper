@@ -14,7 +14,8 @@ public class Images {
     public static final String SMILE_HAPPY = rootRepo + "//smile//4" + FORMAT;
     public static final String SMILE_HAPPY_PRESS = rootRepo + "//smile//5" + FORMAT;
 
-    public static final String TILE = rootRepo + "//tiles//" + "tile" + FORMAT;
+    public static final String TILE = rootRepo + "//tiles//" + "tile1" + FORMAT;
+    public static final String TILE_PRESSED = rootRepo + "//tiles//" + "tile2" + FORMAT;
     public static final String QUESTION = rootRepo + "//tiles//" + "questionR" + FORMAT;
     public static final String QUESTION_PRESSED = rootRepo + "//tiles//" + "questionL" + FORMAT;
     public static final String FLAG = rootRepo + "//tiles//" + "flag" + FORMAT;

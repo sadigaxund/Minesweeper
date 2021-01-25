@@ -13,14 +13,18 @@ public class Tile extends JLabel {
      */
     private static final long serialVersionUID = -2832906721095943314L;
 
-    public Tile() {
+    public static final String PRESSED = Images.TILE_PRESSED;
+    public static final String NOT_PRESSED = Images.TILE;
+
+    public Tile(int x, int y, int w, int h) {
+	setSize(w, h);
+	setLocation(x, y);
 	setIcon(Images.TILE);
-	// addMouseListener(ml);
     }
 
     public void setIcon(String iconPath) {
-	super.setIcon(new ImageIcon(
-		JImages.scaleImage(new ImageIcon(Images.SMILE_HAPPY).getImage(), getWidth(), getHeight())));
+	super.setIcon(new ImageIcon(JImages.scaleImage(new ImageIcon(iconPath).getImage(), getWidth(), getHeight())));
+
     }
 
     public void open() {
@@ -38,35 +42,6 @@ public class Tile extends JLabel {
 	case NUMBER:
 	    setIcon(Images.getTileDigit(number));
 	    break;
-	}
-
-    }
-
-    private void flag() {
-	/* flagging/unflagging the tile */
-	flag = !flag;
-
-	/* Flagging the tile */
-	// if the tile is flagged and the number of tiles does not exceed the limit
-	if (flag && GameView.getGameMode().getMinesAmount() - GameView.FLAG_COUNTER > 0) {
-
-	    /* increase the number of all flags */
-	    GameView.FLAG_COUNTER++;
-
-	    /* Change the label of the flag counter */
-	    Minesweeper.flagCounter.changeLabel(MineField.mines - flagCounter);
-
-	    /* Changing the tile itself */
-	    changeLook(IMinesweeper.FLAG);
-	} else {
-	    /* decrease the number of all flags */
-	    flagCounter--;
-
-	    /* Change the label of the flag counter */
-	    Minesweeper.flagCounter.changeLabel(MineField.mines - flagCounter);
-
-	    /* Changing the tile itself */
-	    changeLook(IMinesweeper.NOTPRESSED_TILE);
 	}
 
     }
@@ -151,33 +126,5 @@ public class Tile extends JLabel {
 
     /** the boolean for defining whether a tile is flagged or not */
     private boolean flag = false;
-
-    /** The mouse listener for a tile */
-    // private MouseAdapter ml = new MouseAdapter() {
-    //
-    // @Override
-    // public void mouseExited(MouseEvent e) {
-    // if (isFlagged())
-    // return;
-    // unPress();
-    // }
-    //
-    // @Override
-    // public void mouseClicked(MouseEvent e) {
-    // /* For starting the timer if it is not started once a tile was clicked */
-    // if (!Main.Minesweeper.TIMER.MECHANISM.isAlive()) {
-    // Main.Minesweeper.TIMER.MECHANISM.start();
-    // }
-    //
-    // /* If a tile was right clicked and is not flagged */
-    // if (e.getButton() == 1 && !isFlagged()) {
-    // /* Open it */
-    // openRecursively();
-    // /* If a tile was left */
-    // } else if (e.getButton() == 3) {
-    // flag_Unflag();
-    // }
-    // }
-    // };
 
 }
