@@ -45,7 +45,22 @@ public class Tools {
 	return str1.toLowerCase().equals(str2.toLowerCase());
     }
 
+    public static boolean isInRange(int number, boolean includedFromLeft, int leftBound, int rightBound,
+	    boolean includedFromRight) {
+
+	if (number > leftBound && number < rightBound) // strictly in range
+	    return true;
+
+	if (includedFromLeft && number == leftBound) // left boundary is the number
+	    return true;
+
+	if (includedFromRight && number == rightBound) // right boundary is the number
+	    return true;
+
+	return false; // not in range
+    }
+
     public static void main(String[] str) {
-	System.out.println(getDigit(419848924, 2, true));
+	System.out.println(isInRange(1, true, 1, 45, false));
     }
 }

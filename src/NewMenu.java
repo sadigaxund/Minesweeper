@@ -33,7 +33,6 @@ public class NewMenu extends JFrame {
      * TODO: ADD: when text selected in mode info labels if yout type already
      * existing text will be deleted
      * 
-     * TODO: Image Handler
      * 
      */
     /**
@@ -92,10 +91,9 @@ public class NewMenu extends JFrame {
 
 	int smileFaceSize = (int) (topPanel.getHeight() - COMPONENT_MARGIN * 1.3); // SMILE FACE ICON SIZE
 	smileFaceLbl = new JLabel("");
-	// smileFaceLabel.setBorder(UIManager.getBorder("DesktopIcon.border"));
 	smileFaceLbl.setBounds(topPanel.getWidth() / 2 - smileFaceSize / 2,
 		topPanel.getHeight() / 2 - smileFaceSize / 2, smileFaceSize, smileFaceSize); // SMILE FACE LOCATION
-	Image smileFaceIcon = JImages.scaleImage(new ImageIcon(".\\img\\smile\\smile1.png").getImage(),
+	Image smileFaceIcon = JImages.scaleImage(new ImageIcon(Images.SMILE_HAPPY).getImage(),
 		smileFaceLbl.getWidth(), smileFaceLbl.getHeight());
 	smileFaceLbl.setIcon(new ImageIcon(smileFaceIcon));
 	topPanel.add(smileFaceLbl);

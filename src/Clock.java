@@ -93,7 +93,7 @@ public class Clock extends JPanel implements Runnable {
 	    throw new BadInputException("Input must be positive and digit: " + digit);
 
 	label.setIcon(new ImageIcon());
-	Image icon = JImages.scaleImage(new ImageIcon(".\\img\\nums\\" + digit + ".png").getImage(), label.getWidth(),
+	Image icon = JImages.scaleImage(new ImageIcon(Images.getHexDigit(digit)).getImage(), label.getWidth(),
 		label.getHeight());
 	label.setIcon(new ImageIcon(icon));
     }
