@@ -27,7 +27,7 @@ public class Tile extends JLabel {
 
     }
 
-    public void open() {
+    public void open(boolean is4Reveal) {
 	/* If the tile was flagged then don't open it */
 	if (flag && !isEmpty())
 	    return;
@@ -37,13 +37,20 @@ public class Tile extends JLabel {
 	    setIcon(Images.getTileDigit(0));
 	    break;
 	case MINE:
-	    setIcon(Images.MINE_DEFUSED);
+	    if (is4Reveal)
+		setIcon(Images.MINE);
+	    else
+		setIcon(Images.MINE_DEFUSED);
 	    break;
 	case NUMBER:
 	    setIcon(Images.getTileDigit(number));
 	    break;
 	}
 
+    }
+
+    public void iterate() {
+	number++;
     }
 
     /**
@@ -58,6 +65,11 @@ public class Tile extends JLabel {
      *                    the content to set
      */
     public synchronized void setContent(Content content) {
+	if (content.equals(Content.EMPTY))
+	    number = 0;
+	else if (content.equals(Content.MINE))
+	    number = -1;
+
 	this.content = content;
     }
 

@@ -302,14 +302,14 @@ public class NewMenu extends JFrame {
 	    displayModeInfo();
 	}
 
-	gameView = new GameView(mainPanel, GAMEMODE);
+	gameView = new GameView(mainPanel, GAMEMODE, cl2);
 	gameView.update();
 	mainPanel.add(gameView);
 	mainPanel.repaint();
     }
 
     private void finishAction() {
-
+	gameView.reveal();
     }
 
     private JPanel contentPane;
