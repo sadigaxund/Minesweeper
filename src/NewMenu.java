@@ -16,6 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.text.PlainDocument;
 import javax.swing.JFormattedTextField;
@@ -42,8 +43,7 @@ public class NewMenu extends JFrame {
 
     /*
      * TODO: ADD: when text selected in mode info labels if yout type already
-     * existing text will be deleted
-     * 
+     * existing text will be deleted <br> TODO: make input validation
      * 
      */
     /**
@@ -266,13 +266,43 @@ public class NewMenu extends JFrame {
 	    mainPanel.repaint();
 	}
 	if (Tools.equalsNoCase(GAMEMODE.getName(), "Custom")) {
-	    GAMEMODE.setMapHeight(Integer.parseInt(ftFieldH.getText()));
-	    GAMEMODE.setMapWidth(Integer.parseInt(ftFieldW.getText()));
-	    GAMEMODE.setMineAmount(Integer.parseInt(ftFieldM.getText()));
+	    boolean flag = true;
+
+	    flag &= GAMEMODE.setMapHeight(Integer.parseInt(ftFieldH.getText())) != null;
+	    flag &= GAMEMODE.setMapWidth(Integer.parseInt(ftFieldW.getText())) != null;
+	    flag &= GAMEMODE.setMineAmount(Integer.parseInt(ftFieldM.getText())) != null;
+	    /**************************/
+	    if (!flag) {
+		JOptionPane.showMessageDialog(mainPanel, "Entered number(s) must not be 0!", "Oops!",
+			JOptionPane.WARNING_MESSAGE);
+		return;
+	    }
+	    ///////////////////////////
+	    flag = true;
+
+	    if (GAMEMODE.getMapWidth() > 50) {
+		GAMEMODE.setMapWidth(50);
+		flag = false;
+	    }
+	    if (GAMEMODE.getMapHeight() > 50) {
+		GAMEMODE.setMapHeight(50);
+		flag = false;
+	    }
+
+	    if (!flag)
+		JOptionPane.showMessageDialog(mainPanel, "Entered number(s) must be less than 50!", "Too Big!",
+			JOptionPane.WARNING_MESSAGE);
+
+	    ///////////////////////////
+	    if (GAMEMODE.getMinesAmount() >= GAMEMODE.getMapHeight() * GAMEMODE.getMapWidth()) {
+		GAMEMODE.setMineAmount(GAMEMODE.getMapHeight() * GAMEMODE.getMapWidth() - 1);
+		JOptionPane.showMessageDialog(mainPanel, "Too many mines!", "Boom!", JOptionPane.WARNING_MESSAGE);
+	    }
+	    /**************************/
+	    displayModeInfo();
 	}
-	// FIXME: Gotta do the ratio of the sizes(forex: for each game mode it's
-	// different)
-	gameView = new GameView(mainPanel, GAMEMODE, 500, 500);
+
+	gameView = new GameView(mainPanel, GAMEMODE);
 	gameView.update();
 	mainPanel.add(gameView);
 	mainPanel.repaint();

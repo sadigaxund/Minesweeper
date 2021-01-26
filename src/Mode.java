@@ -45,6 +45,8 @@ public class Mode {
      *                 the name to set
      */
     public Mode setName(String name) {
+	if (name == null)
+	    return null;
 	this.name = name;
 	return this;
     }
@@ -61,6 +63,8 @@ public class Mode {
      *                       the the amount of mines to set
      */
     public Mode setMineAmount(int mineAmount) {
+	if (mineAmount <= 0)
+	    return null;
 	this.mineAmount = mineAmount;
 	return this;
     }
@@ -77,6 +81,8 @@ public class Mode {
      *                     the mapWidth to set
      */
     public Mode setMapWidth(int mapWidth) {
+	if (mapWidth <= 0)
+	    return null;
 	this.mapWidth = mapWidth;
 	return this;
     }
@@ -93,6 +99,8 @@ public class Mode {
      *                      the mapHeight to set
      */
     public Mode setMapHeight(int mapHeight) {
+	if (mapHeight <= 0)
+	    return null;
 	this.mapHeight = mapHeight;
 	return this;
     }

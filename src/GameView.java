@@ -22,12 +22,11 @@ public class GameView extends JPanel {
 
     private static Mode gameMode;// use only getter to access
 
-    private int tileWidth;
-    private int tileHeight;
+    private int tileSize;
+
     private Tile[][] map;
 
-    public GameView(Component parent, Mode gameMode, int w, int h) {
-	setSize(w, h);
+    public GameView(Component parent, Mode gameMode) {
 	GameView.gameMode = gameMode;
 	this.parent = parent;
 	init();
@@ -47,8 +46,8 @@ public class GameView extends JPanel {
 	addMouseMotionListener(new MouseMotionAdapter() {
 	    @Override
 	    public void mouseDragged(MouseEvent e) {
-		int i = e.getX() / tileWidth;
-		int j = e.getY() / tileHeight;
+		int i = e.getX() / tileSize;
+		int j = e.getY() / tileSize;
 		// TODO: Try to make dragging more smooth, idea: maybe by adding some hitbox
 		// inside
 		dragOverTile(i, j);
@@ -83,16 +82,29 @@ public class GameView extends JPanel {
 	Mode mode = getGameMode();
 	map = new Tile[mode.getMapWidth()][mode.getMapHeight()];
 
-	tileWidth = getWidth() / mode.getMapWidth() - 1;
-	tileHeight = getHeight() / mode.getMapHeight() - 1;
-	setSize(tileWidth * mode.getMapWidth() + 12, tileHeight * mode.getMapHeight() + 12);
+	if (mode.equals(Mode.EASY)) {
+	    tileSize = 30;
+	} else if (mode.equals(Mode.MEDIUM)) {
+	    tileSize = 25;
+	} else if (mode.equals(Mode.HARD)) {
+	    tileSize = 20;
+	} else {
+	    int w = parent.getWidth() / mode.getMapWidth();
+	    int h = parent.getHeight() / mode.getMapHeight();
+
+	    tileSize = (h < w) ? h : w;
+	}
+
+	// tileSize = 25;
+
+	setSize(tileSize * mode.getMapWidth() + 12, tileSize * mode.getMapHeight() + 12);
 
 	for (int i = 0; i < map.length; i++)
 	    for (int j = 0; j < map[i].length; j++) {
-		int tileX = 5 + i * tileWidth;
-		int tileY = 5 + j * tileHeight;
+		int tileX = 5 + i * tileSize;
+		int tileY = 5 + j * tileSize;
 
-		map[i][j] = new Tile(tileX, tileY, tileWidth, tileHeight);
+		map[i][j] = new Tile(tileX, tileY, tileSize, tileSize);
 		add(map[i][j]);
 	    }
 
