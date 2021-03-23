@@ -140,9 +140,9 @@ public class GameView extends JPanel {
 	    int w = rd.nextInt(gameMode.getMapWidth());
 	    int h = rd.nextInt(gameMode.getMapHeight());
 	    /* For making sure that the selected tile has not already had a mine */
-	    while (map[w][h].getContent().equals(Tile.Content.MINE)) {
-		w = rd.nextInt(gameMode.getMapWidth());
-		h = rd.nextInt(gameMode.getMapHeight());
+	    if (map[w][h].getContent().equals(Tile.Content.MINE)) {
+		count--;
+		continue;
 	    }
 
 	    /* Setting the content to the mine */

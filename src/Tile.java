@@ -132,7 +132,7 @@ public class Tile extends JLabel {
      * _____________________________<br>
      * n < 0 | tile has a mine in it <br>
      * n = 0 | tile is empty<br>
-     * n > 1 | tile contains number and n stands for that number
+     * n > 0 | tile contains number and n stands for that number
      */
     private byte number = 0;
 
