@@ -1,15 +1,13 @@
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
-
-import Util.IMinesweeper;
 
 public class GameView extends JPanel {
 
@@ -25,21 +23,35 @@ public class GameView extends JPanel {
 
     private static Mode gameMode;// use only getter to access
 
-    private Clock clock;
-
     private int tileSize;
 
     private Tile[][] map;
+    private ArrayList<Vector2D<Integer, Integer>> minemap;
 
-    public GameView(Component parent, Mode gameMode, Clock timer) {
-	GameView.gameMode = gameMode;
+    // static Clock clock;
+    // static Thread clockMechanism;
+
+    public GameView(Component parent, Mode gameMode, Timer mines) {
 	this.parent = parent;
-	this.clock = timer;
-	init();
-
+	GameView.gameMode = (gameMode == null) ? Mode.getStandardModes()[0] : gameMode; // Null check
+	// GameView.clock = clock;
+	minemap = new ArrayList<Vector2D<Integer, Integer>>();
+	initView();
+	initMap();
+	initMines();
+	// centralize
+	setLocation(parent.getWidth() / 2 - getWidth() / 2, parent.getHeight() / 2 - getHeight() / 2);
+	repaint();
+	// if (clockMechanism != null)
+	//
+	//
+	// clockMechanism = new Thread(clock);
+	// clockMechanism.start();
     }
 
-    private void init() {
+    private int prevI = -1, prevJ = -1;
+
+    private void initView() {
 
 	setBorder(new CompoundBorder(
 		new CompoundBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null),
@@ -54,75 +66,77 @@ public class GameView extends JPanel {
 	    public void mouseDragged(MouseEvent e) {
 		int i = e.getX() / tileSize;
 		int j = e.getY() / tileSize;
-		// TODO: Try to make dragging more smooth, idea: maybe by adding some hitbox
-		// inside
-		dragOverTile(i, j);
+		if (i >= map.length || i < 0 || j >= map[i].length || j < 0 || map[i][j].isRevealed())
+		    return;
+
+		if (prevI != -1)
+		    map[prevI][prevJ].setIcon(Images.TILE_NOT_PRESSED);
+		map[i][j].setIcon(Images.getTileDigit(0));
+		prevI = i;
+		prevJ = j;
 
 	    }
 	});
 	addMouseListener(new MouseAdapter() {
-	    @Override
-	    public void mousePressed(MouseEvent e) {
-		int i = e.getX() / tileSize;
-		int j = e.getY() / tileSize;
-		dragOverTile(i, j);
-		dragOverTile(-1, -1);
-	    }
 
 	    @Override
 	    public void mouseReleased(MouseEvent e) {
-		
 		int i = e.getX() / tileSize;
 		int j = e.getY() / tileSize;
-		map[i][j].open(false);
+		prevI = -1;
+		prevJ = -1;
+		if (i >= map.length || i < 0 || j >= map[i].length || j < 0 || map[i][j].isRevealed())
+		    return;
+
+		switch (e.getButton()) {
+		case MouseEvent.BUTTON1:
+		    Tile.open(map, i, j);
+
+		    break;
+		case MouseEvent.BUTTON3:
+		    if (map[i][j].isFlag()) {
+			map[i][j].setIcon(Images.TILE_NOT_PRESSED);
+			map[i][j].setFlag(false);
+		    } else {
+			map[i][j].setIcon(Images.FLAG);
+			map[i][j].setFlag(true);
+		    }
+
+		    break;
+		}
+
 	    }
 	});
 
-	initMap();
-	initMines();
-    }
-
-    private int prevI, prevJ;
-
-    private void dragOverTile(int i, int j) {
-	try {
-	    if (prevI != -1 && prevJ != -1)
-		map[prevI][prevJ].setIcon(Tile.NOT_PRESSED);
-	    map[i][j].setIcon(Tile.PRESSED);
-	    prevI = i;
-	    prevJ = j;
-	} catch (ArrayIndexOutOfBoundsException ex) {
-	    // Ignore
-	}
     }
 
     private void initMap() {
-	Mode mode = getGameMode();
-	map = new Tile[mode.getMapWidth()][mode.getMapHeight()];
 
-	if (mode.equals(Mode.EASY)) {
+	map = new Tile[gameMode.getMapWidth()][gameMode.getMapHeight()];
+
+	if (gameMode.equals(Mode.EASY)) {
 	    tileSize = 30;
-	} else if (mode.equals(Mode.MEDIUM)) {
+	} else if (gameMode.equals(Mode.MEDIUM)) {
 	    tileSize = 25;
-	} else if (mode.equals(Mode.HARD)) {
+	} else if (gameMode.equals(Mode.HARD)) {
 	    tileSize = 20;
 	} else {
-	    int w = parent.getWidth() / mode.getMapWidth();
-	    int h = parent.getHeight() / mode.getMapHeight();
+	    int w = parent.getWidth() / gameMode.getMapWidth();
+	    int h = parent.getHeight() / gameMode.getMapHeight();
 
 	    tileSize = (h < w) ? h : w;
 	}
 
 	// tileSize = 25;
 
-	setSize(tileSize * mode.getMapWidth() + 12, tileSize * mode.getMapHeight() + 12);
+	setSize(tileSize * gameMode.getMapWidth() + 12, tileSize * gameMode.getMapHeight() + 12);
 
 	for (int i = 0; i < map.length; i++)
 	    for (int j = 0; j < map[i].length; j++) {
 		int tileX = 5 + i * tileSize;
 		int tileY = 5 + j * tileSize;
 
-		map[i][j] = new Tile(tileX, tileY, tileSize, tileSize);
+		map[i][j] = new Tile(tileX, tileY, tileSize, tileSize, i, j);
 		map[i][j].setContent(Tile.Content.EMPTY);
 		add(map[i][j]);
 	    }
@@ -144,88 +158,56 @@ public class GameView extends JPanel {
 		count--;
 		continue;
 	    }
-
+	    minemap.add(new Vector2D<>(w, h)); // save location of mines
 	    /* Setting the content to the mine */
 	    map[w][h].setContent(Tile.Content.MINE);
 	    /*** increasing the number of the tile around the mine ***/
 
-	    /** Positions of the Tiles **/
-	    /* Left Center */
-	    numberTile(w - 1, h);
-	    /* Right Center */
-	    numberTile(w + 1, h);
+	    /** Positions of the Tiles, set all 8 adjacent tile to number **/
+	    /* LEFT - UP */
+	    Tile.setNumeral(map, w - 1, h + 1);
+	    /* LEFT - CENTER */
+	    Tile.setNumeral(map, w - 1, h);
+	    /* LEFT - BELOW */
+	    Tile.setNumeral(map, w - 1, h - 1);
 
-	    /* Left Below */
-	    numberTile(w - 1, h - 1);
-	    /* Below Center */
-	    numberTile(w, h - 1);
-	    /* Right Below */
-	    numberTile(w + 1, h - 1);
+	    /* RIGHT - UP */
+	    Tile.setNumeral(map, w + 1, h + 1);
+	    /* RIGHT - CENTER */
+	    Tile.setNumeral(map, w + 1, h);
+	    /* RIGHT - BELOW */
+	    Tile.setNumeral(map, w + 1, h - 1);
 
-	    /* Left Up */
-	    numberTile(w - 1, h + 1);
-	    /* Center Up */
-	    numberTile(w, h + 1);
-	    /* Up Right */
-	    numberTile(w + 1, h + 1);
+	    /* CENTER - DOWN */
+	    Tile.setNumeral(map, w, h - 1);
+	    /* CENTER - UP */
+	    Tile.setNumeral(map, w, h + 1);
+
 	}
 
     }
 
-    private void numberTile(int w, int h) {
-	try {
-	    /*
-	     * in order not to set the content of the tile which has mine to number content
-	     */
-	    if (map[w][h].getContent().equals(Tile.Content.MINE)) {
-		return;
-	    }
-	    /* Setting the content identifier of a tile to the number */
-	    map[w][h].setContent(Tile.Content.NUMBER);
+    private void setupClock() {
 
-	    /* see: Tile.iterate() */
-	    map[w][h].iterate();
-	} catch (ArrayIndexOutOfBoundsException e) {
-	}
     }
 
     public void reveal() {
 
-	clock.getTimer().disable();
-
-	for (int i = 0; i < gameMode.getMapWidth(); i++) {
+	// clock.getTimer().disable();
+	for (int i = 0; i < gameMode.getMapWidth(); i++)
 	    for (int j = 0; j < gameMode.getMapHeight(); j++) {
-		if (map[i][j].getContent().equals(Tile.Content.MINE) && map[i][j].getFlag()) {
+		if (map[i][j].getContent().equals(Tile.Content.MINE) && map[i][j].isFlag())
 		    continue;
-		}
-
-		map[i][j].open(true);
-
+		Tile.open(map, i, j);
 	    }
-	}
-    }
 
-    public void update() {
-	setLocation(parent.getWidth() / 2 - getWidth() / 2, parent.getHeight() / 2 - getHeight() / 2);
-	repaint();
-    }
-
-    /**
-     * @return the gameMode
-     */
-    public static synchronized Mode getGameMode() {
-
-	if (gameMode == null)
-	    return Mode.getStandardModes()[0];
-
-	return gameMode;
     }
 
     /**
      * @param gameMode
      *                     the gameMode to set
      */
-    public synchronized void setGameMode(Mode gameMode) {
+    public void setGameMode(Mode gameMode) {
 	GameView.gameMode = gameMode;
     }
 

@@ -13,13 +13,10 @@ public class Tile extends JLabel {
      */
     private static final long serialVersionUID = -2832906721095943314L;
 
-    public static final String PRESSED = Images.TILE_PRESSED;
-    public static final String NOT_PRESSED = Images.TILE;
-
-    public Tile(int x, int y, int w, int h) {
+    public Tile(int x, int y, int w, int h, int i, int j) {
 	setSize(w, h);
 	setLocation(x, y);
-	setIcon(Images.TILE);
+	setIcon(Images.TILE_NOT_PRESSED);
     }
 
     public void setIcon(String iconPath) {
@@ -27,32 +24,67 @@ public class Tile extends JLabel {
 
     }
 
-    public void open(boolean is4Reveal) {
+    public static void open(Tile[][] map, int i, int j) {
+	if (i >= map.length || i < 0 || j >= map[i].length || j < 0 || map[i][j].isRevealed())
+	    return;
+	
+	Tile tile = map[i][j].setRevealed(true);
+	
 	/* If the tile was flagged then don't open it */
-	if (flag && !isEmpty())
+	if (tile.flag && !tile.isEmpty())
 	    return;
 
-	switch (content) {
-	case EMPTY:
-	    setIcon(Images.getTileDigit(0));
-	    break;
+	String icon = Images.getTileDigit(0);
+	switch (tile.getContent()) {
 	case MINE:
-	    if (is4Reveal)
-		setIcon(Images.MINE);
-	    else
-		setIcon(Images.MINE_DEFUSED);
+	    icon = Images.MINE_BLOWN;
 	    break;
 	case NUMBER:
-	    setIcon(Images.getTileDigit(number));
+	    icon = Images.getTileDigit(tile.getNumber());
+	    break;
+	case EMPTY:
+	    open(map, i, j + 1);
+
+	    open(map, i + 1, j);
+
+	    open(map, i, j - 1);
+
+	    open(map, i - 1, j);
+	    break;
+	default:
 	    break;
 	}
+	tile.setIcon(icon);
 
+    }
+
+    public void spread() {
+
+    }
+
+    public static void setNumeral(Tile[][] map, int w, int h) {
+	try {
+	    /*
+	     * in order not to set the content of the tile which has mine to number content
+	     */
+	    if (map[w][h].getContent().equals(Tile.Content.MINE)) {
+		return;
+	    }
+	    /* Setting the content identifier of a tile to the number */
+	    map[w][h].setContent(Tile.Content.NUMBER);
+
+	    /* see: Tile.iterate() */
+	    map[w][h].iterate();
+	} catch (ArrayIndexOutOfBoundsException e) {
+	}
     }
 
     public void iterate() {
 	number++;
     }
 
+    ///////////////////////////////////// SETTERS & GETTERS
+    ///////////////////////////////////// /////////////////////////////////////
     /**
      * @return the content
      */
@@ -91,7 +123,7 @@ public class Tile extends JLabel {
     /**
      * @return the flagged
      */
-    public synchronized boolean getFlag() {
+    public synchronized boolean isFlag() {
 	return flag;
     }
 
@@ -118,6 +150,25 @@ public class Tile extends JLabel {
 	this.number = number;
     }
 
+    /**
+     * @return the revealed
+     */
+    public synchronized boolean isRevealed() {
+	return revealed;
+    }
+
+    /**
+     * @param revealed
+     *                     the revealed to set
+     */
+    public synchronized Tile setRevealed(boolean revealed) {
+	this.revealed = revealed;
+	return this;
+    }
+
+    ///////////////////////////////////// VARIABLES
+    ///////////////////////////////////// /////////////////////////////////////
+
     /** Defines the content of a tile */
     public static enum Content {
 	EMPTY, NUMBER, MINE;
@@ -138,5 +189,7 @@ public class Tile extends JLabel {
 
     /** the boolean for defining whether a tile is flagged or not */
     private boolean flag = false;
+
+    private boolean revealed = false;
 
 }

@@ -108,23 +108,23 @@ public class NewMenu extends JFrame {
 	int clockW = 60;
 	int clockH = topPanel.getHeight() - COMPONENT_MARGIN;
 
-	Timer timer = new Timer();
-	timer.disable();
-	timer.setStopTime(999);
+	mines = new Timer();
+	mines.disable();
+	mines.setStopTime(999);
 
-	cl = new Clock(timer, clockW, clockH, smileFaceLbl.getX() - clockW - COMPONENT_MARGIN, COMPONENT_MARGIN / 2);
-	topPanel.add(cl);
-	new Thread(cl).start();
+	mineCounter = new Clock(mines, clockW, clockH, smileFaceLbl.getX() - clockW - COMPONENT_MARGIN,
+		COMPONENT_MARGIN / 2);
+	topPanel.add(mineCounter);
 
-	Timer timer2 = new Timer();
-	timer2.enable();
-	timer2.setStopTime(999);
-	timer2.setDelay(1000);
+	time = new Timer();
+	time.enable();
+	time.setStopTime(999);
+	time.setDelay(1000);
 
-	cl2 = new Clock(timer2, clockW, clockH, smileFaceLbl.getX() + smileFaceLbl.getWidth() + COMPONENT_MARGIN,
+	timeCounter = new Clock(time, clockW, clockH, smileFaceLbl.getX() + smileFaceLbl.getWidth() + COMPONENT_MARGIN,
 		COMPONENT_MARGIN / 2);
 
-	topPanel.add(cl2);
+	topPanel.add(timeCounter);
     }
 
     private void addFormattedTextFields() {
@@ -199,7 +199,7 @@ public class NewMenu extends JFrame {
 	});
 	btnStart.setFont(new Font("Consolas", Font.BOLD, 13));
 	btnStart.setUI(new CustomButton());
-	x = cl2.getX() + cl2.getWidth() + COMPONENT_MARGIN;
+	x = timeCounter.getX() + timeCounter.getWidth() + COMPONENT_MARGIN;
 	w = (topPanel.getWidth() - x - 2 * COMPONENT_MARGIN) / 2;
 	h = 35;
 	y = 5;
@@ -235,7 +235,8 @@ public class NewMenu extends JFrame {
 	ftFieldM.setText(GAMEMODE.getMinesAmount() + "");
 	ftFieldW.setText(GAMEMODE.getMapWidth() + "");
 	ftFieldH.setText(GAMEMODE.getMapHeight() + "");
-	cl.setClock(GAMEMODE.getMinesAmount());
+	mineCounter.setClock(GAMEMODE.getMinesAmount());
+	timeCounter.getTimer().on();
     }
 
     private void comboBoxHandleAction() {
@@ -249,6 +250,10 @@ public class NewMenu extends JFrame {
 	if (gameView != null) {
 	    mainPanel.remove(gameView);
 	    mainPanel.repaint();
+
+	    topPanel.remove(mineCounter);
+	    topPanel.remove(timeCounter);
+	    topPanel.repaint();
 	}
 	if (Tools.equalsNoCase(GAMEMODE.getName(), "Custom")) {
 	    boolean flag = true;
@@ -275,7 +280,8 @@ public class NewMenu extends JFrame {
 	    }
 
 	    if (!flag)
-		JOptionPane.showMessageDialog(mainPanel, "Entered number(s) must be less than 50!", "Too Big!",
+		JOptionPane.showMessageDialog(mainPanel,
+			"Entered number(s) must be less than 50! Default max parameters will be set.", "Too Big!",
 			JOptionPane.WARNING_MESSAGE);
 
 	    ///////////////////////////
@@ -287,8 +293,10 @@ public class NewMenu extends JFrame {
 	    displayModeInfo();
 	}
 
-	gameView = new GameView(mainPanel, GAMEMODE, cl2);
-	gameView.update();
+	gameView = new GameView(mainPanel, GAMEMODE, mines);
+	clockMechanism = new Thread(timeCounter);
+	clockMechanism.start();
+
 	mainPanel.add(gameView);
 	mainPanel.repaint();
     }
@@ -326,8 +334,13 @@ public class NewMenu extends JFrame {
 
     private JComboBox<String> comboBox;
 
-    private Clock cl;
-    private Clock cl2;
+    private Clock mineCounter;
+    private Clock timeCounter;
+
+    private Timer mines;
+    private Timer time;
+    
+    private Thread clockMechanism;
 
     private GameView gameView;
 

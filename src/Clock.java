@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -106,7 +105,7 @@ public class Clock extends JPanel implements Runnable {
 	    Tools.Wait(timer.getDelay()); // Wait
 
 	    if (timer.isON()) {
-		timer.increment();// Time + 1
+		timer.plus1();// Time + 1
 
 		if (timer.getStopTime() != -1 && timer.getTime() == timer.getStopTime())
 		    timer.off();// stop the timer

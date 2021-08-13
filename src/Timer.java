@@ -7,6 +7,13 @@ public class Timer {
     private int delay = 1000;
     private int stopTime = -1;
 
+    public static void main(String[] args) {
+	Timer t = new Timer();
+	t.plus1();
+	t.add(5);
+	System.out.println(t.getTime());
+    }
+
     public Timer() {
     }
 
@@ -21,7 +28,7 @@ public class Timer {
 	seconds += secs;
     }
 
-    public void increment() {
+    public void plus1() {
 	add(1);
     }
 
