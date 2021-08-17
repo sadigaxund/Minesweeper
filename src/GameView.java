@@ -27,13 +27,13 @@ public class GameView extends JPanel {
 
     private Tile[][] map;
     private ArrayList<Vector2D<Integer, Integer>> minemap;
+    private Timer mines;
+    private Timer time;
 
-    // static Clock clock;
-    // static Thread clockMechanism;
-
-    public GameView(Component parent, Mode gameMode, Timer mines) {
+    public GameView(Component parent, Mode gameMode, Timer mines, Timer time) {
 	this.parent = parent;
 	GameView.gameMode = (gameMode == null) ? Mode.getStandardModes()[0] : gameMode; // Null check
+	this.mines = mines;
 	// GameView.clock = clock;
 	minemap = new ArrayList<Vector2D<Integer, Integer>>();
 	initView();
@@ -66,7 +66,7 @@ public class GameView extends JPanel {
 	    public void mouseDragged(MouseEvent e) {
 		int i = e.getX() / tileSize;
 		int j = e.getY() / tileSize;
-		if (i >= map.length || i < 0 || j >= map[i].length || j < 0 || map[i][j].isRevealed())
+		if (Tile.invalidateTile(map, i, j) || map[i][j].isFlagged())
 		    return;
 
 		if (prevI != -1)
@@ -85,21 +85,38 @@ public class GameView extends JPanel {
 		int j = e.getY() / tileSize;
 		prevI = -1;
 		prevJ = -1;
-		if (i >= map.length || i < 0 || j >= map[i].length || j < 0 || map[i][j].isRevealed())
+		if (Tile.invalidateTile(map, i, j))
 		    return;
 
 		switch (e.getButton()) {
 		case MouseEvent.BUTTON1:
-		    Tile.open(map, i, j);
+		    boolean isOK = Tile.open(map, i, j);
+		    if (!isOK)
+			gameLOST();
 
 		    break;
 		case MouseEvent.BUTTON3:
-		    if (map[i][j].isFlag()) {
+		    if (map[i][j].isFlagged()) {
 			map[i][j].setIcon(Images.TILE_NOT_PRESSED);
 			map[i][j].setFlag(false);
+			mines.set(mines.getTime() + 1);
 		    } else {
 			map[i][j].setIcon(Images.FLAG);
 			map[i][j].setFlag(true);
+			mines.set(mines.getTime() - 1);
+			if (mines.getTime() == 0) {
+			    boolean AllMinesWereFlagged = true;
+			    System.out.println("Zero Mines...");
+			    for (Vector2D<Integer, Integer> index : minemap) {
+				AllMinesWereFlagged &= map[index.getA()][index.getB()].isFlagged();
+				System.out.println(AllMinesWereFlagged);
+			    }
+
+			    if (AllMinesWereFlagged) {
+				// TODO: WIN CASE
+				System.out.println("WON");
+			    }
+			}
 		    }
 
 		    break;
@@ -187,19 +204,19 @@ public class GameView extends JPanel {
 
     }
 
-    private void setupClock() {
+    public void gameLOST() {
+	time.off();
+	for (int i = 0; i < map.length; i++)
+	    for (int j = 0; j < map[i].length; j++) {
+		Tile tile = map[i][j];
+		if (tile.getContent() == Tile.Content.MINE && !tile.isFlagged())
+		    tile.setIcon(Images.MINE);
+
+	    }
 
     }
 
-    public void reveal() {
-
-	// clock.getTimer().disable();
-	for (int i = 0; i < gameMode.getMapWidth(); i++)
-	    for (int j = 0; j < gameMode.getMapHeight(); j++) {
-		if (map[i][j].getContent().equals(Tile.Content.MINE) && map[i][j].isFlag())
-		    continue;
-		Tile.open(map, i, j);
-	    }
+    public void gameWON() {
 
     }
 

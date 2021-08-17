@@ -24,42 +24,48 @@ public class Tile extends JLabel {
 
     }
 
-    public static void open(Tile[][] map, int i, int j) {
-	if (i >= map.length || i < 0 || j >= map[i].length || j < 0 || map[i][j].isRevealed())
-	    return;
-	
+    public static boolean invalidateTile(Tile[][] map, int i, int j) {
+	return i >= map.length || i < 0 || j >= map[i].length || j < 0 || map[i][j].isRevealed();
+    }
+
+    static int wasAnyMineBlown = 0;
+
+    public static boolean open(Tile[][] map, int i, int j) {
+	if (invalidateTile(map, i, j) || map[i][j].isFlagged()) // even though we check
+	    return true;
+
 	Tile tile = map[i][j].setRevealed(true);
-	
+
 	/* If the tile was flagged then don't open it */
 	if (tile.flag && !tile.isEmpty())
-	    return;
+	    return true;
 
 	String icon = Images.getTileDigit(0);
 	switch (tile.getContent()) {
 	case MINE:
-	    icon = Images.MINE_BLOWN;
-	    break;
+	    tile.setIcon(Images.MINE_BLOWN);
+	    tile.setFlag(true);
+	    return false; // The only case when the method return false is game over
+
 	case NUMBER:
 	    icon = Images.getTileDigit(tile.getNumber());
 	    break;
 	case EMPTY:
-	    open(map, i, j + 1);
-
-	    open(map, i + 1, j);
-
 	    open(map, i, j - 1);
-
+	    open(map, i, j + 1);
+	    open(map, i + 1, j);
 	    open(map, i - 1, j);
+	    open(map, i + 1, j + 1);
+	    open(map, i + 1, j - 1);
+	    open(map, i - 1, j + 1);
+	    open(map, i - 1, j - 1);
+
 	    break;
 	default:
 	    break;
 	}
 	tile.setIcon(icon);
-
-    }
-
-    public void spread() {
-
+	return true;
     }
 
     public static void setNumeral(Tile[][] map, int w, int h) {
@@ -123,7 +129,7 @@ public class Tile extends JLabel {
     /**
      * @return the flagged
      */
-    public synchronized boolean isFlag() {
+    public synchronized boolean isFlagged() {
 	return flag;
     }
 

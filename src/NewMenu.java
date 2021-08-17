@@ -59,20 +59,33 @@ public class NewMenu extends JFrame {
      * Create the frame.
      */
     public NewMenu() {
-	initVars();
-	initComponents();
+	setupFrame();
 
+	addModeComboBox();
+	addClocks();
+	addFormattedTextFields();
+	addModeLabels();
+	addGameButtons();
+
+	Thread gameMechanism = new Thread() {
+	    public void run() {
+		while (true) {
+		    mineCounter.setClock(mines.getTime());
+		    Tools.Wait(LATENCY);
+		}
+	    };
+	};
+	gameMechanism.start();
+
+	contentPane.add(mainPanel);
     }
 
-    private void initVars() {
-
-    }
-
-    private void initComponents() {
+    private void setupFrame() {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 736, 614);// TODO Change to dynamic variables
 	setLocation(SCREEN_WIDTH / 2 - getWidth() / 2, SCREEN_HEIGHT / 2 - getHeight() / 2); // move window to the
-											     // center
+
+	// center
 	contentPane = new JPanel();
 	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	setContentPane(contentPane);
@@ -93,15 +106,6 @@ public class NewMenu extends JFrame {
 		smileFaceLbl.getHeight());
 	smileFaceLbl.setIcon(new ImageIcon(smileFaceIcon));
 	topPanel.add(smileFaceLbl);
-
-	addModeComboBox();
-	addClocks();
-	addFormattedTextFields();
-	addModeLabels();
-	addGameButtons();
-
-	contentPane.add(mainPanel);
-
     }
 
     private void addClocks() {
@@ -115,7 +119,8 @@ public class NewMenu extends JFrame {
 	mineCounter = new Clock(mines, clockW, clockH, smileFaceLbl.getX() - clockW - COMPONENT_MARGIN,
 		COMPONENT_MARGIN / 2);
 	topPanel.add(mineCounter);
-
+	clockMechanism = new Thread(timeCounter);
+	clockMechanism.start();
 	time = new Timer();
 	time.enable();
 	time.setStopTime(999);
@@ -199,24 +204,16 @@ public class NewMenu extends JFrame {
 	});
 	btnStart.setFont(new Font("Consolas", Font.BOLD, 13));
 	btnStart.setUI(new CustomButton());
-	x = timeCounter.getX() + timeCounter.getWidth() + COMPONENT_MARGIN;
-	w = (topPanel.getWidth() - x - 2 * COMPONENT_MARGIN) / 2;
+
+	w = topPanel.getWidth() - COMPONENT_MARGIN * 2 - (timeCounter.getX() + timeCounter.getWidth());
+
+	// w = (topPanel.getWidth() - x - 2 * COMPONENT_MARGIN) / 2;
 	h = 35;
+	x = timeCounter.getX() + timeCounter.getWidth() + COMPONENT_MARGIN;
 	y = 5;
 	btnStart.setBounds(x, y, w, h);
 	topPanel.add(btnStart);
-
-	btnFinish = new JButton("FINISH");
-	btnFinish.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		finishAction();
-	    }
-	});
-	btnFinish.setUI(new CustomButton());
-	btnFinish.setFont(new Font("Consolas", Font.BOLD, 13));
 	x = btnStart.getX() + btnStart.getWidth() + COMPONENT_MARGIN;
-	btnFinish.setBounds(x, y, w, h);
-	topPanel.add(btnFinish);
 
 	mainPanel = new JPanel();
 	mainPanel.setBorder(new MatteBorder(2, 4, 6, 4, (Color) new Color(153, 180, 209)));
@@ -250,9 +247,6 @@ public class NewMenu extends JFrame {
 	if (gameView != null) {
 	    mainPanel.remove(gameView);
 	    mainPanel.repaint();
-
-	    topPanel.remove(mineCounter);
-	    topPanel.remove(timeCounter);
 	    topPanel.repaint();
 	}
 	if (Tools.equalsNoCase(GAMEMODE.getName(), "Custom")) {
@@ -293,16 +287,10 @@ public class NewMenu extends JFrame {
 	    displayModeInfo();
 	}
 
-	gameView = new GameView(mainPanel, GAMEMODE, mines);
-	clockMechanism = new Thread(timeCounter);
-	clockMechanism.start();
-
+	gameView = new GameView(mainPanel, GAMEMODE, mines, time);
+	mines.set(GAMEMODE.getMinesAmount());
 	mainPanel.add(gameView);
 	mainPanel.repaint();
-    }
-
-    private void finishAction() {
-	gameView.reveal();
     }
 
     private JPanel contentPane;
@@ -314,6 +302,7 @@ public class NewMenu extends JFrame {
     public static final int WINDOW_WIDTH = (int) (SCREEN_WIDTH * RATIO);
     public static final int WINDOW_HEIGHT = (int) (SCREEN_HEIGHT * RATIO);
     public static final int COMPONENT_MARGIN = 10;
+    public static final int LATENCY = 100;
 
     public static Mode GAMEMODE = Mode.EASY;// Default Value is easy
 
@@ -330,7 +319,6 @@ public class NewMenu extends JFrame {
     private JLabel lblH;
 
     private JButton btnStart;
-    private JButton btnFinish;
 
     private JComboBox<String> comboBox;
 
@@ -339,8 +327,9 @@ public class NewMenu extends JFrame {
 
     private Timer mines;
     private Timer time;
-    
+
     private Thread clockMechanism;
+    private Thread mineCntMechanism;
 
     private GameView gameView;
 
