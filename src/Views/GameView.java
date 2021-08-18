@@ -50,7 +50,7 @@ public class GameView extends JPanel {
 	this.mines = mines;
 	this.timer = timer;
 	this.smileFace = smileFace;
-	GameView.gameMode = (gameMode == null) ? Mode.getStandardModes()[0] : gameMode; // Null check
+	GameView.gameMode = (gameMode == null) ? Mode.EASY : gameMode; // Null check
 	minemap = new ArrayList<Vector2D<Integer, Integer>>();
 	initView();
 	initMap();
@@ -101,7 +101,7 @@ public class GameView extends JPanel {
 
 		switch (e.getButton()) {
 		case MouseEvent.BUTTON1:
-		    boolean isOK = Tile.open(map, i, j);
+		    boolean isOK = Tile.reveal(map, i, j);
 		    if (!isOK)
 			gameLOST();
 

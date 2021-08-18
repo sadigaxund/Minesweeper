@@ -1,3 +1,20 @@
+/***************************************************************************
+ *     Copyright 2021 Sadig Akhund @ https://github.com/sadigaxund
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ **************************************************************************/
+
 package Components;
 
 import java.awt.Dimension;
@@ -35,7 +52,7 @@ public class CustomButton extends BasicButtonUI {
 	};
 	f.addWindowListener(wndCloser);
 	f.setVisible(true);
-	
+
     }
 
     @Override
@@ -53,7 +70,7 @@ public class CustomButton extends BasicButtonUI {
 
 	if (b.getModel().isPressed()) {
 	    paintBackground(g, b, 2);
-	    
+
 	} else {
 	    paintBackground(g, b, 0);
 	}

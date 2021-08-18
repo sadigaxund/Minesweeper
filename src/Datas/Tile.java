@@ -1,9 +1,24 @@
+/***************************************************************************
+ *     Copyright 2021 Sadig Akhund @ https://github.com/sadigaxund
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ **************************************************************************/
 package Datas;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import Util.Tools;
 import Utils.JImages;
 
 public class Tile extends JLabel {
@@ -19,18 +34,45 @@ public class Tile extends JLabel {
 	setIcon(Images.TILE_NOT_PRESSED);
     }
 
+    /**
+     * Method for changing the icon of a tile
+     * 
+     * @param iconPath
+     *                     the source of an image
+     */
     public void setIcon(String iconPath) {
 	super.setIcon(new ImageIcon(JImages.scaleImage(new ImageIcon(iconPath).getImage(), getWidth(), getHeight())));
 
     }
 
+    /**
+     * Method to check if the tile is inside the boundaries of the map and if it was
+     * revealed.
+     * 
+     * @param map
+     *                the map this tile is supposed to be on
+     * @param i
+     *                row index
+     * @param j
+     *                column index
+     * @return true if tile is valid, false otherwise
+     */
     public static boolean invalidateTile(Tile[][] map, int i, int j) {
 	return i >= map.length || i < 0 || j >= map[i].length || j < 0 || map[i][j].isRevealed();
     }
 
-    static int wasAnyMineBlown = 0;
-
-    public static boolean open(Tile[][] map, int i, int j) {
+    /**
+     * Method for revealing the tile
+     * 
+     * @param map
+     *                the map this tile is on
+     * @param i
+     *                row index
+     * @param j
+     *                column index
+     * @return true if no mine was revealed, false if mine was blown
+     */
+    public static boolean reveal(Tile[][] map, int i, int j) {
 	if (invalidateTile(map, i, j) || map[i][j].isFlagged()) // even though we check
 	    return true;
 
@@ -51,14 +93,14 @@ public class Tile extends JLabel {
 	    icon = Images.getTileDigit(tile.getNumber());
 	    break;
 	case EMPTY:
-	    open(map, i, j - 1);
-	    open(map, i, j + 1);
-	    open(map, i + 1, j);
-	    open(map, i - 1, j);
-	    open(map, i + 1, j + 1);
-	    open(map, i + 1, j - 1);
-	    open(map, i - 1, j + 1);
-	    open(map, i - 1, j - 1);
+	    reveal(map, i, j - 1);
+	    reveal(map, i, j + 1);
+	    reveal(map, i + 1, j);
+	    reveal(map, i - 1, j);
+	    reveal(map, i + 1, j + 1);
+	    reveal(map, i + 1, j - 1);
+	    reveal(map, i - 1, j + 1);
+	    reveal(map, i - 1, j - 1);
 
 	    break;
 	default:
@@ -69,6 +111,17 @@ public class Tile extends JLabel {
 	return true;
     }
 
+    /**
+     * Method used while creating a map. Each time a mine is generated on the map,
+     * this method is called on every tile which is 1 tile away from mine.
+     * 
+     * @param map
+     *                the map this tile is on
+     * @param i
+     *                row index
+     * @param j
+     *                column index
+     */
     public static void setNumeral(Tile[][] map, int w, int h) {
 	try {
 	    /*
@@ -81,17 +134,15 @@ public class Tile extends JLabel {
 	    map[w][h].setContent(Tile.Content.NUMBER);
 
 	    /* see: Tile.iterate() */
-	    map[w][h].iterate();
+	    map[w][h].number++;
 	} catch (ArrayIndexOutOfBoundsException e) {
 	}
     }
 
-    public void iterate() {
-	number++;
-    }
+    /**************************************************************************************************
+     * *************************************** SETTERS & GETTERS
+     **************************************************************************************************/
 
-    ///////////////////////////////////// SETTERS & GETTERS
-    ///////////////////////////////////// /////////////////////////////////////
     /**
      * @return the content
      */

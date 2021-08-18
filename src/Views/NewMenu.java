@@ -193,7 +193,8 @@ public class NewMenu extends JFrame {
 	    }
 	});
 
-	comboBox.setModel((ComboBoxModel<String>) new DefaultComboBoxModel<String>(GAMEMODE.getNames()));
+	comboBox.setModel((ComboBoxModel<String>) new DefaultComboBoxModel<String>(
+		new String[] { "Easy", "Medium", "Hard", "Custom" }));
 	comboBox.setBounds(COMPONENT_MARGIN, COMPONENT_MARGIN, comboBoxWidth, comboBoxHeight);// COMBO BOX LOCATION
 	topPanel.add(comboBox);
     }

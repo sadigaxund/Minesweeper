@@ -24,6 +24,9 @@ public class BadInputException extends Error {
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Error message to be shown
+     */
     private String message = "Bad Input!";
 
     public BadInputException() {
