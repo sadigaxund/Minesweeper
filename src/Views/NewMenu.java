@@ -1,3 +1,28 @@
+/***************************************************************************
+ *   MIT License
+ *   
+ *   Copyright (c) 2021 Sadig Akhund
+ *   
+ *   Permission is hereby granted, free of charge, to any person obtaining a copy
+ *   of this software and associated documentation files (the "Software"), to deal
+ *   in the Software without restriction, including without limitation the rights
+ *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *   copies of the Software, and to permit persons to whom the Software is
+ *   furnished to do so, subject to the following conditions:
+ *   
+ *   The above copyright notice and this permission notice shall be included in all
+ *   copies or substantial portions of the Software.
+ *   
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *   SOFTWARE.
+ *
+ * 
+ **************************************************************************/
 package Views;
 
 import java.awt.EventQueue;
@@ -35,13 +60,15 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * TODO: ADD: when text selected in mode info labels if yout type already
+ * existing text will be deleted <br>
+ * TODO: make input validation<br>
+ * TODO: make absolute values dynamic, add more control.
+ * 
+ */
 public class NewMenu extends JFrame {
 
-    /*
-     * TODO: ADD: when text selected in mode info labels if yout type already
-     * existing text will be deleted <br> TODO: make input validation
-     * 
-     */
     /**
      * 
      */
@@ -304,45 +331,131 @@ public class NewMenu extends JFrame {
 	mainPanel.repaint();
     }
 
+    /***********************************************************
+     * VARIABLE DECLARATION
+     ***********************************************************/
+    /**
+     * The content pane component
+     */
     private JPanel contentPane;
 
+    /**
+     * The ratio of a screen that the program window will be.<br>
+     */
     private static double RATIO = 0.8;
 
+    /**
+     * The Width of the screen
+     */
     public static final int SCREEN_WIDTH = (int) JHardware.getScreenSize().getWidth();
+    /**
+     * The Height of the screen
+     */
     public static final int SCREEN_HEIGHT = (int) JHardware.getScreenSize().getHeight();
+    /**
+     * The Width of the program window
+     */
     public static final int WINDOW_WIDTH = (int) (SCREEN_WIDTH * RATIO);
+    /**
+     * The Height of the program window
+     */
     public static final int WINDOW_HEIGHT = (int) (SCREEN_HEIGHT * RATIO);
+    /**
+     * The margin by how much that all the components must be separated from each
+     * other.
+     */
     public static final int COMPONENT_MARGIN = 10;
+    /**
+     * The delay for the game mechanism
+     */
     public static final int LATENCY = 100;
-
+    /**
+     * The current game mode
+     */
     public static Mode GAMEMODE = Mode.EASY;// Default Value is easy
-
+    /**
+     * The main canvas that holds the game view. <br>
+     * TODO: add some background
+     */
     private JPanel mainPanel;
+    /**
+     * The panel that holds the upper menu which has buttons, input fields and smile
+     * face on it.
+     */
     private JPanel topPanel;
 
+    /**
+     * Text field for the amount of mines.
+     */
     private JFormattedTextField ftFieldM;
+    /**
+     * Text field for the width of the map.
+     */
     private JFormattedTextField ftFieldW;
+    /**
+     * Text field for the height of the map.
+     */
     private JFormattedTextField ftFieldH;
-
+    /**
+     * Icon for the smile face
+     */
     private JLabel smileFaceLbl;
+    /**
+     * Text label: "M:"
+     */
     private JLabel lblM;
+    /**
+     * Text label: "W:"
+     */
     private JLabel lblW;
+    /**
+     * Text label: "H:"
+     */
     private JLabel lblH;
-
+    /**
+     * "Start" Button
+     */
     private JButton btnStart;
-
+    /**
+     * Combobox for choosing the game modes
+     */
     private JComboBox<String> comboBox;
 
+    /**
+     * Displayable component for an instance of <i>Timer</i> class that holds the
+     * amount of mines. <br>
+     * The loop is killed from the start, since it will be controlled by the action
+     * instead of time itself.
+     */
     private Clock mineCounter;
+    /**
+     * Displayable component for an instance of <i>Timer</i> class that holds the
+     * time value.
+     */
     private Clock timeCounter;
-
+    /**
+     * An instance of <i>Timer</i> class that holds the amount of mines.
+     */
     private Timer mines;
+    /**
+     * An instance of <i>Timer</i> class that holds the time value.
+     */
     private Timer timer;
 
+    /**
+     * Mechanism that runs the Timer and changes the face of the Clock. See
+     * <i>Clock</i> class for how the mechanism works.
+     */
     private Thread clockMechanism;
 
+    /**
+     * The view where map will be displayed on.
+     */
     private GameView gameView;
-
+    /**
+     * Font used for Mode labels. <br>
+     * <strong>Tahoma Bold 13</strong>
+     */
     private static final Font modeLabelFont = new Font("Tahoma", Font.BOLD, 13);
 
 }

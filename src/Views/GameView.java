@@ -1,3 +1,29 @@
+/***************************************************************************
+ *   MIT License
+ *   
+ *   Copyright (c) 2021 Sadig Akhund
+ *   
+ *   Permission is hereby granted, free of charge, to any person obtaining a copy
+ *   of this software and associated documentation files (the "Software"), to deal
+ *   in the Software without restriction, including without limitation the rights
+ *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *   copies of the Software, and to permit persons to whom the Software is
+ *   furnished to do so, subject to the following conditions:
+ *   
+ *   The above copyright notice and this permission notice shall be included in all
+ *   copies or substantial portions of the Software.
+ *   
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *   SOFTWARE.
+ *
+ * 
+ **************************************************************************/
+
 package Views;
 
 import java.awt.Component;
@@ -28,21 +54,54 @@ public class GameView extends JPanel {
      * 
      */
     private static final long serialVersionUID = 4493755493576259516L;
+    /**
+     * The parent of the Game view. Usually it is a Menu view.
+     */
     private Component parent;
 
+    /**
+     * The size of a tile.
+     */
     public static final int TILE_SIZE = 10;
 
+    /**
+     * The amount of flags.
+     */
     public static volatile int FLAG_COUNTER = 0;
 
-    private static Mode gameMode;// use only getter to access
+    /**
+     * The current mode of the game.
+     */
+    private Mode gameMode;// use only getter to access
 
+    /**
+     * The size of the tiles.
+     */
     private int tileSize;
-
+    /**
+     * The Map.
+     */
     private Tile[][] map;
+    /**
+     * A list that holds coordinates of the mines.
+     */
     private ArrayList<Vector2D<Integer, Integer>> minemap;
+    /**
+     * Mine counter.
+     */
     private Timer mines;
+    /**
+     * Timer.
+     */
     private Timer timer;
+    /**
+     * The smile face.
+     */
     private JLabel smileFace;
+    /**
+     * The state of the game. If true no modification actions such as revealing the
+     * tile or flagging can be done.
+     */
     private boolean GAMEOVER = false;
 
     public GameView(Component parent, JLabel smileFace, Mode gameMode, Timer mines, Timer timer) {
@@ -50,7 +109,7 @@ public class GameView extends JPanel {
 	this.mines = mines;
 	this.timer = timer;
 	this.smileFace = smileFace;
-	GameView.gameMode = (gameMode == null) ? Mode.EASY : gameMode; // Null check
+	this.gameMode = (gameMode == null) ? Mode.EASY : gameMode; // Null check
 	minemap = new ArrayList<Vector2D<Integer, Integer>>();
 	initView();
 	initMap();
@@ -251,7 +310,7 @@ public class GameView extends JPanel {
      *                     the gameMode to set
      */
     public void setGameMode(Mode gameMode) {
-	GameView.gameMode = gameMode;
+	this.gameMode = gameMode;
     }
 
 }
