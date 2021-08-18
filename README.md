@@ -33,6 +33,7 @@
 
 ## Setup
 Dependencies: 
+  - Eclipse IDE 2018 (at least I used it)
   - Java SE 8 or above 
   - Java Swing Framework
 
