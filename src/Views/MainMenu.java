@@ -67,7 +67,7 @@ import java.awt.event.ActionEvent;
  * TODO: make absolute values dynamic, add more control.
  * 
  */
-public class NewMenu extends JFrame {
+public class MainMenu extends JFrame {
 
     /**
      * 
@@ -84,7 +84,7 @@ public class NewMenu extends JFrame {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
 		try {
-		    NewMenu frame = new NewMenu();
+		    MainMenu frame = new MainMenu();
 		    frame.setVisible(true);
 		} catch (Exception e) {
 		    e.printStackTrace();
@@ -96,7 +96,7 @@ public class NewMenu extends JFrame {
     /**
      * Create the frame.
      */
-    public NewMenu() {
+    public MainMenu() {
 	setupFrame();
 
 	addModeComboBox();
@@ -122,7 +122,8 @@ public class NewMenu extends JFrame {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 736, 614);// TODO Change to dynamic variables
 	setLocation(SCREEN_WIDTH / 2 - getWidth() / 2, SCREEN_HEIGHT / 2 - getHeight() / 2); // move window to the
-
+	setTitle("Minesweeper by Sadig Akhund");
+	setIconImage(new ImageIcon(".//img//frame_icon.png").getImage());
 	// center
 	contentPane = new JPanel();
 	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

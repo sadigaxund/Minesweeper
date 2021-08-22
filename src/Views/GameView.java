@@ -275,9 +275,7 @@ public class GameView extends JPanel {
     public void gameLOST() {
 	GAMEOVER = true;
 	timer.off();
-	Image Icon = JImages.scaleImage(new ImageIcon(Images.LOSE_SCREEN).getImage(), 35, 35);
-	JOptionPane.showMessageDialog(this, "Sorry, You Lost!", "Game Over", JOptionPane.OK_OPTION,
-		new ImageIcon(Icon));
+
 	for (int i = 0; i < map.length; i++)
 	    for (int j = 0; j < map[i].length; j++) {
 		Tile tile = map[i][j];
@@ -292,17 +290,21 @@ public class GameView extends JPanel {
 	Image smileFaceIcon = JImages.scaleImage(new ImageIcon(Images.SMILE_DEAD).getImage(), smileFace.getWidth(),
 		smileFace.getHeight());
 	smileFace.setIcon(new ImageIcon(smileFaceIcon));
+	Image Icon = JImages.scaleImage(new ImageIcon(Images.LOSE_SCREEN).getImage(), 35, 35);
+	JOptionPane.showMessageDialog(this, "Sorry, You Lost!", "Game Over", JOptionPane.OK_OPTION,
+		new ImageIcon(Icon));
     }
 
     public void gameWON() {
 	GAMEOVER = true;
 	timer.off();
-	Image Icon = JImages.scaleImage(new ImageIcon(Images.WIN_SCREEN).getImage(), 35, 35);
-	JOptionPane.showMessageDialog(this, "Congratulations, You Won!", "Game Over", JOptionPane.OK_OPTION,
-		new ImageIcon(Icon));
 	Image smileFaceIcon = JImages.scaleImage(new ImageIcon(Images.SMILE_COOL).getImage(), smileFace.getWidth(),
 		smileFace.getHeight());
 	smileFace.setIcon(new ImageIcon(smileFaceIcon));
+	Image Icon = JImages.scaleImage(new ImageIcon(Images.WIN_SCREEN).getImage(), 35, 35);
+	JOptionPane.showMessageDialog(this, "Congratulations, You Won!", "Game Over", JOptionPane.OK_OPTION,
+		new ImageIcon(Icon));
+
     }
 
     /**
