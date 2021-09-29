@@ -64,7 +64,7 @@ The basic functionality and game logic has been implemented. Although main algor
 
 ## Contact
 Created by [Sadig Akhund](https://github.com/sadigaxund) - feel free to contact me!
-Email: sadigaxund+githubContact@gmail.com
+Email: sadigaxund@gmail.com
 
 
 
