@@ -1,5 +1,7 @@
 # Minesweeper by Sadig
 
+
+
 ## Table of Contents
 * [General Info](#general-information)
 * [Features](#features)
@@ -66,5 +68,58 @@ The basic functionality and game logic has been implemented. Although main algor
 Created by [Sadig Akhund](https://github.com/sadigaxund) - feel free to contact me!
 Email: sadigaxund@gmail.com
 
+## Check Out My Other Projects
+<dl>
+  <dd>
+    <a href="https://github.com/sadigaxund/SuperMarioGame">
+      <img  src="https://github-readme-stats.vercel.app/api/pin/?username=sadigaxund&repo=SuperMarioGame" />
+    </a>
+  </dd>
+  
+  <dd>
+    <a href="https://github.com/sadigaxund/Haptic-Glove-Teleoperation">
+      <img src="https://github-readme-stats.vercel.app/api/pin/?username=sadigaxund&repo=Haptic-Glove-Teleoperation" />
+    </a>
+  </dd>
+   
+  <dd>
+    <a href="https://github.com/sadigaxund/EasyMetro">
+      <img  src="https://github-readme-stats.vercel.app/api/pin/?username=sadigaxund&repo=EasyMetro" />
+    </a>
+  </dd>
+    
+  <dd>
+    <a href="https://github.com/sadigaxund/Minesweeper">
+      <img src="https://github-readme-stats.vercel.app/api/pin/?username=sadigaxund&repo=Minesweeper" />
+    </a>
+  </dd>
+    
+  <dd>
+    <a href="https://bit.ly/3kuDNe1">
+      <img src="https://github-readme-stats.vercel.app/api/pin/?username=sadigaxund&repo=Game-Of-Life" />
+    </a>
+  </dd>   
+  
+  <dd>
+    <a href="https://github.com/sadigaxund/Math-and-Coding-Challanges">
+      <img src="https://github-readme-stats.vercel.app/api/pin/?username=sadigaxund&repo=Math-and-Coding-Challanges" />
+    </a>
+  </dd>
+</dl>
+  
 
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
 
